@@ -1,0 +1,28 @@
+version: "3"
+volumes:
+  mongodata:
+services:
+  python:
+    build:
+      context: .
+      dockerfile: docker/dev/python/Dockerfile
+    environment:
+      HOST_NAME: http://localhost:8000/
+      MONGO_HOST: mongodb://mongodb
+      MONGO_PORT: 27017
+      MONGO_DATABASE_NAME: pabor_bot
+      TG_BOT_KEY: replace_with_real_bot_key
+    volumes:
+      - ./app:/usr/src/app/app
+    ports:
+      - 8000:8000
+  mongodb:
+    image: mongo:3.6.18
+    environment:
+      MONGO_HOST: mongodb://localhost
+      MONGO_PORT: 27017
+      MONGO_DATABASE_NAME: pabor_bot
+    volumes:
+      - mongodata:/var/lib/mongodb/data
+    ports:
+      - 27017:27017

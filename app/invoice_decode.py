@@ -5,6 +5,8 @@ import pathlib
 from models import Invoice, Item
 import config
 
+class BillFetchError(Exception):
+    pass
 
 async def decode_qr(qr: typing.Union[pathlib.Path, str]):
     if isinstance(qr, str):
@@ -38,6 +40,9 @@ async def _fetch_bill_qr(qr: pathlib.Path):
     
 
 def _convert_bill(bill):
+
+    if 'error' in bill:
+        raise BillFetchError(bill['error'])
 
     def convert_item(item):
         return {

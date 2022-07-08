@@ -1,4 +1,4 @@
-FROM python:3.10.2
+FROM python:3.9.9
 MAINTAINER debbius3@gmail.com
 
 WORKDIR /usr/shr/app

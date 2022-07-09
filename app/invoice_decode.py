@@ -46,12 +46,12 @@ def _convert_bill(bill):
 
     def convert_item(item):
         return {
-            'total_price': item['price'] * item['quantity'],
+            'total_price': item['price'] * item['quantity'] / 100,
             'name': item['name'],
             'details': '🤔'
         }
 
     return {
-        'total_cost': bill['total'],
+        'total_cost': bill['total'] / 100,
         'items': list(map(convert_item, bill['records']))
     }

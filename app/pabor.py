@@ -616,7 +616,7 @@ async def _send_invoice_money_requests(context: ContextTypes.DEFAULT_TYPE, invoi
     owner = await User.find_by_id(invoice.get('owner_id'))
 
     for user_id, user_total in users_owe.items():
-        if user_id == owner['id']:
+        if user_id == owner['_id']:
             continue  # comment if you want to check it yourself
 
         operation_id = await Operation.create(invoice_id, user_id, user_total)

@@ -12,6 +12,7 @@ services:
       MONGO_PORT: 27017
       MONGO_DATABASE_NAME: pabor_bot
       TG_BOT_KEY: replace_with_real_bot_key
+      BILL_FETCH_HOST: 127.0.0.1:8080
     volumes:
       - ./app:/usr/src/app/app
     ports:

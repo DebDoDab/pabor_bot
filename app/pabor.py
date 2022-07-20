@@ -1,5 +1,7 @@
 import logging
 import re
+import pathlib
+import typing
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import (
@@ -74,9 +76,9 @@ async def qr_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     author = await User.find_by_tg_id(str(update.message.from_user.id))
     user_id = str(author.get('_id'))
     photo_file = await update.message.photo[-1].get_file()
-    await photo_file.download(f"user_{user_id}_qr.jpg")
-    qr = "random_qr_string"  # TODO: decode qr photo
-    return await _qr(update, context, qr)
+    file_path = pathlib.Path('/tmp') / f'user_{user_id}_qr.jpg'
+    await photo_file.download(file_path)
+    return await _qr(update, context, file_path)
 
 
 async def qr(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -84,7 +86,7 @@ async def qr(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return await _qr(update, context, qr)
 
 
-async def _qr(update: Update, context: ContextTypes.DEFAULT_TYPE, qr: str):
+async def _qr(update: Update, context: ContextTypes.DEFAULT_TYPE, qr: typing.Union[pathlib.Path, str]):
     author = await User.find_by_tg_id(str(update.message.from_user.id))
     user_id = str(author.get('_id'))
     try:
@@ -614,7 +616,7 @@ async def _send_invoice_money_requests(context: ContextTypes.DEFAULT_TYPE, invoi
     owner = await User.find_by_id(invoice.get('owner_id'))
 
     for user_id, user_total in users_owe.items():
-        if user_id == owner['id']:
+        if user_id == owner['_id']:
             continue  # comment if you want to check it yourself
 
         operation_id = await Operation.create(invoice_id, user_id, user_total)
